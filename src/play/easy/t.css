@@ -1,0 +1,14 @@
+body{
+	margin: 0px;
+	overscroll-behavior: none;
+}
+#back{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+#front{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
