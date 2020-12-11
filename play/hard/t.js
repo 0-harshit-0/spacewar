@@ -1,20 +1,9 @@
-function bulletEvent(mouse) {
-  
-  if (shoot.reload) {
-    shoot.reload = false;
-    let temp = new Vector2D(mouse.x, mouse.y);
-    let acc = Vector2D.normalize(Vector2D.sub(temp, center));
-    let velocity = Vector2D.mul(acc, 5);
-    golistore(velocity);
-    setTimeout(()=> {
-      shoot.reload = true;
-    }, reloadTime);
-  }
-}
+/*let btn = document.querySelectorAll('input');
+for (var i = 0; i < btn.length; i++) {
+  btn[i].toggleAttribute("disabled");
+}*/
 
-
-
-var mobile = false;
+let mobile = false, fire = false;
 (function detec() { 
      
     if (navigator.userAgent.match(/Android/i) 
@@ -26,18 +15,19 @@ var mobile = false;
         || navigator.userAgent.match(/Windows Phone/i)) { 
         
         addEventListener('touchstart', (e)=> {
+          fire = true;
           ctx.setTransform(1,0,0,1,0,0);
           let bla = e.changedTouches[0];
           mouse.x = bla.clientX;
           mouse.y = bla.clientY;
-          bulletEvent(mouse);
         });
+        addEventListener('touchend', ()=>{fire=false});
+      
         addEventListener('touchmove', (e)=> {
           ctx.setTransform(1,0,0,1,0,0);
           let bla = e.changedTouches[0];
           mouse.x = bla.clientX;
           mouse.y = bla.clientY;
-          bulletEvent(mouse);
         });
     } else {
         //console.log(1)
@@ -48,7 +38,20 @@ var mobile = false;
     }
 })();
 
-var colorP = [
+
+addEventListener("resize", () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  bgcanvas.width = innerWidth;
+  bgcanvas.height = innerHeight;
+
+  invCanvas.width = innerWidth;
+  invCanvas.height = innerHeight;
+
+});
+
+const colorP = [
   "rgb(255, 255, 255)",
   "rgb(0, 255, 255)",
   "rgb(250, 0, 0)",
@@ -59,21 +62,29 @@ var colorP = [
 
 const bgcanvas = document.querySelector("#back");
 const bgctx = bgcanvas.getContext("2d");
+let bs = new Shapes(bgctx);
 bgcanvas.width = innerWidth;
 bgcanvas.height = innerHeight;
 
 let mouse = new Vector2D();
-
-let bs = new Shapes(bgctx);
-let center = new Vector2D(innerWidth / 2, innerHeight / 2);
-let lifemeter = bgcanvas.width / 2, e = 0;
+let center = new Vector2D(innerWidth/2, innerHeight/2);
+let lifemeter = bgcanvas.width/2-10, elixirMeter = 0;
 let score = 0;
+
+function scoreAndLife() {
+  bgctx.fillStyle = "rgb(250, 250, 0)";
+  let size = 30;
+  bgctx.font = size + "px" + " arial";
+  bgctx.fillText(`${score}`, bgcanvas.width/2 - size/2, bgcanvas.height-size);
+  //bgctx.fillText(`life: ${shoot.life}`, size, size*2);
+}
+
 
 class Shooter {
   constructor() {
     this.r = 10;
     this.pos = center;
-    this.life = Math.floor(bgcanvas.width / 2 - 15);
+    this.life = Math.floor(bgcanvas.width/2);
     this.elixir = 0;
     this.m = 2;
     this.reload = true;
@@ -89,21 +100,17 @@ class Shooter {
     bs.stroke("rgba(0, 200, 150, 1)");
 
     //elixir
-    bs.line(bgcanvas.width / 2, 10, bgcanvas.width / 2 + e++, 10);
-    bs.stroke("rgba(0, 200, 0, 1)");
-    e = Vector2D.constrain(e, 0, this.elixir);
-
-    if (e > bgcanvas.width / 2) {
+    elixirMeter = Vector2D.constrain(elixirMeter, 0, this.elixir);   
+    if (elixirMeter > bgcanvas.width/2) {
       this.elixir = 0;
-      e = 0;
+      elixirMeter = 0;
     }
-  }
-  move() {
-    this.draw();
+
+    bs.line(bgcanvas.width/2+10, 10, bgcanvas.width/2+10 + elixirMeter++, 10);
+    bs.stroke("rgba(0, 200, 0, 1)"); 
   }
   draw() {
     //console.log(this.pos);
-
     bs.circle(center.x, center.y, this.r);
     bs.fill("rgb(245, 240, 240)");
   }
@@ -113,11 +120,8 @@ class Assault extends Shooter {
     super();
   }
   drawAttack() {
-    bgctx.save(); 
     bs.ellipse(this.posp.x, this.posp.y, this.r*1.7, this.r/2, 0, Math.PI*2, this.theta);
     bs.fill("rgba(250, 250, 250, 1)");
-    bgctx.closePath();
-    bgctx.restore();
   }
   moveAttack() {
     let dir = Vector2D.sub(mouse, center);
@@ -134,11 +138,8 @@ class MachineGun extends Shooter {
     super();
   }
   drawAttack() {
-    bgctx.save();
     bs.ellipse(this.posp.x, this.posp.y, this.r*0.9, this.r*0.9, 0, Math.PI, this.theta+(90*Math.PI/180));
     bs.fill("rgba(250, 250, 250, 1)");
-    bgctx.closePath();
-    bgctx.restore();
   }
   moveAttack() {
     let dir = Vector2D.sub(mouse, center);
@@ -155,14 +156,10 @@ class Sniper extends Shooter {
     super();
   }
   drawAttack() {
-    bgctx.save();
-    bgctx.beginPath();
     bs.ellipse(this.posp.x, this.posp.y, this.r*1.7, this.r/2, 0, Math.PI*2, this.theta);
     bs.fill("rgba(250, 250, 250, 1)");
     bs.ellipse(this.posp.x, this.posp.y, this.r*0.9, this.r*0.9, 0, Math.PI, this.theta+(90*Math.PI/180));
     bs.fill("rgba(250, 250, 250, 1)");
-    bgctx.closePath();
-    bgctx.restore();
   }
   moveAttack() {
     let dir = Vector2D.sub(mouse, center);
@@ -174,17 +171,7 @@ class Sniper extends Shooter {
     this.drawAttack();
   }
 }
-function scoreAndLife() {
-  bgctx.fillStyle = "rgb(250, 250, 0)";
-  let size = 30;
-  bgctx.font = size + "px" + " arial";
-  bgctx.fillText(
-    `${score}`,
-    bgcanvas.width / 2 - size / 2,
-    bgcanvas.height - size
-  );
-  //bgctx.fillText(`life: ${shoot.life}`, size, size*2);
-}
+
 
 class Stars {
   constructor(x, y, vx, vy, radius) {
@@ -203,19 +190,18 @@ class Stars {
   }
 }
 
-let carray = new Array();
+let starStore = new Array();
+let shoot = new Shooter();
 (() => {
-  for (var i = 0; i < 1000; i++) {
-    var radius = Math.random();
-    var x = Math.random() * (innerWidth - radius * 2);
-    var y = Math.random() * (innerHeight - radius * 2);
-    var dx = (Math.random() - 0.5) / 5;
-    var dy = (Math.random() - 0.5) / 5;
-    carray.push(new Stars(x, y, dx, dy, radius));
+  for (let i = 0; i < 1000; i++) {
+    let radius = Math.random();
+    let x = Math.random() * (innerWidth - radius * 2);
+    let y = Math.random() * (innerHeight - radius * 2);
+    let dx = (Math.random() - 0.5) / 5;
+    let dy = (Math.random() - 0.5) / 5;
+    starStore.push(new Stars(x, y, dx, dy, radius));
   }
 })();
-
-let shoot = new Shooter();
 
 function animatio() {
   //bgctx.fillStyle = 'rgba(0, 0, 0, 1)';
@@ -229,27 +215,22 @@ function animatio() {
     location.assign("https://spacewars.glitch.me/");
   }
 
-  if (shoot.life >= 1) {
+  if (shoot.life) {
     ship.moveAttack();
     shoot.draw();
     shoot.lifeBar();
     scoreAndLife();
-  }else if (shoot.life <= 0) {
+  }else {
     cancelAnimationFrame(inter);
-    shoot.life = 100;
     alert("it's over captain...");
     location.assign("https://spacewars.glitch.me/");
   }
 
-  for (var k = 0; k < carray.length; k++) {
-    carray[k].update();
-    if (
-      carray[k].pos.y >= bgcanvas.height ||
-      carray[k].pos.y < 0 ||
-      carray[k].pos.x >= bgcanvas.width ||
-      carray[k].pos.x <= 0
-    ) {
-      carray.splice(k, 1);
+  for (let k = 0; k < starStore.length; k++) {
+    starStore[k].update();
+    if (starStore[k].pos.y >= bgcanvas.height || starStore[k].pos.y < 0 ||
+        starStore[k].pos.x >= bgcanvas.width || starStore[k].pos.x <= 0) {
+      starStore.splice(k, 1);
     }
   }
 
@@ -258,16 +239,12 @@ function animatio() {
 
 //================================================================
 
-const canvas = document.querySelector("canvas");
+const canvas = document.querySelector("#front");
 const ctx = canvas.getContext("2d");
+let s = new Shapes(ctx);
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-addEventListener("resize", () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-});
-let s = new Shapes(ctx);
 
 class Bullets {
   constructor(velocity) {
@@ -275,11 +252,10 @@ class Bullets {
     this.vel = velocity;
     this.r = 2;//this.power;
     this.c = "white";
-    //console.log(mouse)
   }
   draw() {
     s.circle(this.pos.x, this.pos.y, this.r);
-    s.stroke(this.c);
+    s.fill(this.c);
     this.pos = Vector2D.add(this.pos, this.vel);
     this.life--;
   }
@@ -306,7 +282,8 @@ class MachineBullets extends Bullets {
 }
 class SniperBullets extends Bullets {
   constructor(velocity) {
-    super(velocity);
+    let temp = Vector2D.mul(velocity, 2);
+    super(temp);
     this.life = 70;
     this.power = 10000;
   }
@@ -322,7 +299,6 @@ class Particles {
     this.r = radius;
     this.c = color;
     this.life = 40;
-    //this.
   }
   draw() {
     s.circle(this.pos.x, this.pos.y, this.r);
@@ -334,24 +310,21 @@ class Particles {
     this.life--;
   }
 }
-
 // invaders start
 
 class Invaders {
   constructor(x, y, radius, color) {
     this.pos = new Vector2D(x, y);
     this.vel = new Vector2D();
-    //this.r = radius;
     this.life = radius;
     this.power = 20;
     this.c = color;
-    this.m = 4;
-    //this.
+    this.m = 5;
   }
   draw() {
-    //console.log(this.pos);
-    s.circle(this.pos.x, this.pos.y, this.life);
-    s.fill(this.c);
+    this.theta = Math.atan2(this.vel.y, this.vel.x);
+    invS.complex(this.life, this.pos.x, this.pos.y, this.m, this.theta);
+    invS.fill(this.c);
   }
   move() {
     this.vel = Vector2D.sub(center, this.pos);
@@ -384,7 +357,7 @@ class SmartInv extends Invaders {
     return Vector2D.div(dir, mouse.m);
   }
   move() {
-    this.acc = SmartInv.attract(shoot, this, 0.5);
+    this.acc = SmartInv.attract(center, this, 0.5);
     
     this.vel = Vector2D.add(this.acc, this.vel);
     //console.log(this.acc);
@@ -402,31 +375,24 @@ let golistore, reloadTime;
 
 
 function create() {
+  let dis = Math.floor(Math.max(canvas.width, canvas.height));
+  let theta = Math.random() * 360;
+  let xp = Math.cos(theta*Math.PI/180) * dis;
+  let yp = Math.sin(theta*Math.PI/180) * dis;
+  let radii = Math.floor(Math.random() * (canvas.width+canvas.height)/100)+10;
+  let colour = colorP[Math.floor(Math.random() * colorP.length)];
   if (Math.random() < 0.5) {
-    let dis = Math.floor(Math.max(canvas.width, canvas.height));
-    let theta = Math.random() * 360;
-    let xp = Math.cos(theta*Math.PI/180) * dis;
-    let yp = Math.sin(theta*Math.PI/180) * dis;
-    let radii = Math.floor(Math.random() * (canvas.width+canvas.height)/100)+10;
-    let colour = colorP[Math.floor(Math.random() * colorP.length)];
     store.push(new Invaders(Math.floor(canvas.width/2+xp), Math.floor(canvas.height/2+yp), radii, colour));
   }else {
-    let dis = Math.floor(Math.min(canvas.width, canvas.height));
-    let theta = Math.random() * 360;
-    let xp = Math.cos(theta*Math.PI/180) * dis;
-    let yp = Math.sin(theta*Math.PI/180) * dis;
-    let radii = Math.floor(Math.random() * (canvas.width+canvas.height)/100)+10;
-    let colour = colorP[Math.floor(Math.random() * colorP.length)];
     store.push(new SmartInv(Math.floor(canvas.width/2+xp), Math.floor(canvas.height/2+yp), radii, colour));
   }
 }
 
 
 //bullets maker===================================
-
-addEventListener("keypress", e => {
-
-  if (shoot.reload && (e.key == 'q' || e.key == 'Q')) {
+function bulletEvent(mouse) {
+  
+  if (shoot.reload) {
     shoot.reload = false;
     let temp = new Vector2D(mouse.x, mouse.y);
     let acc = Vector2D.normalize(Vector2D.sub(temp, center));
@@ -436,12 +402,16 @@ addEventListener("keypress", e => {
       shoot.reload = true;
     }, reloadTime);
   }
-  
+}
+
+addEventListener("keypress", e => {
+  if (shoot.reload && (e.key == 'q' || e.key == 'Q')) {
+    bulletEvent(mouse);
+  }
 });
 
 function animation() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (fire) {
     bulletEvent(mouse);
@@ -451,9 +421,8 @@ function animation() {
     bulletsStore.forEach(x => {
       if (x.life) {
         x.draw();
-        //x.collision();
-      } else {
-        for (var p = 0; p < 10; p++) {
+      }else {
+        for (let p = 0; p < 10; p++) {
           particle.push(new Particles(x.pos.x, x.pos.y, 1, x.c));
         }
         bulletsStore.splice(bulletsStore.indexOf(x), 1);
@@ -461,13 +430,50 @@ function animation() {
     });
   }
 
+  //collision
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  for (let i = 0; i < store.length; i++) {
+    for (let j = 0; j < bulletsStore.length; j++) {
+      let d = Vector2D.distance(bulletsStore[j].pos, store[i].pos);
+      if (d - store[i].life - 2 <= 0) {
+        for (let p = 0; p < 10; p++) {
+          particle.push(new Particles(bulletsStore[j].pos.x, bulletsStore[j].pos.y, 1, store[i].c));
+        }
+        store[i].life -= bulletsStore[j].power;
+        bulletsStore.splice(j, 1);
+      }
+    }
+  }
+  particle.forEach(x => {
+    if(x.life) {
+      x.move();
+    }else {
+      particle.splice(particle.indexOf(x), 1);
+    }
+  });
+
+  inter = requestAnimationFrame(animation);
+}
+
+//invaders canvas
+let invCanvas = document.querySelector('#invaders');
+let invCtx = invCanvas.getContext('2d');
+invCanvas.width = innerWidth;
+invCanvas.height = innerHeight;
+let invS = new Shapes(invCtx);
+
+function animati() {
+  invCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  invCtx.fillRect(0, 0, invCanvas.width, invCanvas.height);
+
   store.forEach(x => {
     if (x.life >= 10) {
       x.draw();
       x.move();
-    } else {
+    }else {
       score++;
-      shoot.elixir += x.life * 2;
+      shoot.elixir += x.life;
       store.splice(store.indexOf(x), 1);
     }
 
@@ -477,68 +483,44 @@ function animation() {
     }
   });
 
-  //collision
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-  for (var i = 0; i < store.length; i++) {
-    for (var j = 0; j < bulletsStore.length; j++) {
-      let d = Vector2D.distance(bulletsStore[j].pos, store[i].pos);
-      if (d - store[i].life - 2 <= 0) {
-        for (var p = 0; p < 10; p++) {
-          particle.push(
-            new Particles(
-              bulletsStore[j].pos.x,
-              bulletsStore[j].pos.y,
-              1,
-              store[i].c
-            )
-          );
-        }
-        //console.log(1)
-        store[i].life -= bulletsStore[j].power;
-        bulletsStore.splice(j, 1);
-        //break;
-      }
-    }
-  }
-  particle.forEach(x => {
-    if (x.life) {
-      x.move();
-    } else {
-      particle.splice(particle.indexOf(x), 1);
-    }
-  });
-
-  inter = requestAnimationFrame(animation);
+  requestAnimationFrame(animati);
 }
 
-let shipNo = prompt('ship no.');
+let heading = document.querySelector('#txt');
+let container = document.querySelector('#container');
 let ship;
-switch(shipNo) {
-  case '1':
-    ship = new Assault();
-    reloadTime = 300;
-    golistore = (v) => {
-      bulletsStore.push(new AssaultBullets(v));
-    }
-    break;
-  case '2':
-    ship = new MachineGun();
-    reloadTime = 100;
-    golistore = (v) => {
-      bulletsStore.push(new MachineBullets(v));
-    }
-    break;
-  case '3':
-    ship = new Sniper();
-    reloadTime = 1000;
-    golistore = (v) => {
-      bulletsStore.push(new SniperBullets(v));
-    }
-    break;
+function startGame(shipNo) {
+  heading.style.display = 'none';
+  container.style.display = 'none';
+
+  switch(shipNo) {
+    case '1':
+      ship = new Assault();
+      reloadTime = 300;
+      golistore = (v) => {
+        bulletsStore.push(new AssaultBullets(v));
+      }
+      break;
+    case '2':
+      ship = new MachineGun();
+      reloadTime = 10;
+      golistore = (v) => {
+        bulletsStore.push(new MachineBullets(v));
+      }
+      break;
+    case '3':
+      ship = new Sniper();
+      reloadTime = 1000;
+      golistore = (v) => {
+        bulletsStore.push(new SniperBullets(v));
+      }
+      break;
+  }
+  
+  invderInter = setInterval(create, timer);
+
+  
+  animatio();
+  animation();
+  animati();
 }
-
-invderInter = setInterval(create, timer);
-
-animatio();
-animation();
