@@ -2,33 +2,63 @@
 <html>
 <head>
 	<meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Space Wars</title>
-  
-  <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap"
-    />
+
+	<link rel="stylesheet" type="text/css"	href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap"/>
 	
+	<script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/utility.min.js" defer="true"></script>
+
 	<link rel="stylesheet" type="text/css" href="t.css">
-	<script src="../../utility.js" defer="true"></script>
 	<script type="text/javascript" src="t.js" defer="true"></script>
 
 </head>
 <body>
 
-
+	<h1 id="txt">select your ship captain</h1>
 	<div id="container">
-		<b id="txt">select your ship captain: </b><br><br>
-		<button onclick="startGame('1')">Assault</button>
-		<button onclick="startGame('2')">SMG</button>
-		<button onclick="startGame('3')">Sniper</button>
+		<button onclick="startGame('1')">
+			<div class="imgs">
+				<img src="../../images/basic0.png">
+			</div>
+			<h2 class="shipName">Assault</h2>
+			<p class="desc">
+				Damage: 4<br>
+				range: 50<br>
+				reload: 300ms<br>
+				super: fires bullets from all angles for 3 seconds.
+			</p>
+		</button>
+		<button onclick="startGame('2')">
+			<div class="imgs">
+				<img src="../../images/smg.png">
+			</div>
+			<h2 class="shipName">SMG</h2>
+			<p class="desc">
+				Damage: 2<br>
+				range: 30<br>
+				reload: 10ms<br>
+				super: Range doubles for 5 seconds.
+			</p>
+		</button>
+		<button onclick="startGame('3')">
+			<div class="imgs">
+				<img src="../../images/sniper.png">
+			</div>
+			<h2 class="shipName">Sniper</h2>
+			<p class="desc">
+				Damage: 100<br>
+				range: 80<br>
+				reload: 1000ms<br>
+				super: fires 5 penetrable bullets.
+			</p>
+		</button>
 	</div>
+
+	<canvas id="invaders"></canvas>
 	<canvas id="front"></canvas>
 	<canvas id="back"></canvas>
-	
 
 </body>
 </html>
