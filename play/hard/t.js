@@ -212,7 +212,7 @@ function animatio() {
     cancelAnimationFrame(inter);
     score = 0;
     alert("congratulation captain you did it...");
-    location.assign("https://spacewars.glitch.me/");
+    location.assign("https://spacewarfare.glitch.me/");
   }
 
   if (shoot.life) {
@@ -223,7 +223,7 @@ function animatio() {
   }else {
     cancelAnimationFrame(inter);
     alert("it's over captain...");
-    location.assign("https://spacewars.glitch.me/");
+    location.assign("https://spacewarfare.glitch.me/");
   }
 
   for (let k = 0; k < starStore.length; k++) {

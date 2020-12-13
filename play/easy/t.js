@@ -212,7 +212,7 @@ function animatio() {
     cancelAnimationFrame(inter);
     score = 0;
     alert("congratulation captain you did it...");
-    location.assign("https://spacewars.glitch.me/");
+    location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
   if (shoot.life) {
@@ -223,16 +223,16 @@ function animatio() {
   }else {
     cancelAnimationFrame(inter);
     alert("it's over captain...");
-    location.assign("https://spacewars.glitch.me/");
+    location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
-  for (let k = 0; k < starStore.length; k++) {
+  /*for (let k = 0; k < starStore.length; k++) {
     starStore[k].update();
     if (starStore[k].pos.y >= bgcanvas.height || starStore[k].pos.y < 0 ||
         starStore[k].pos.x >= bgcanvas.width || starStore[k].pos.x <= 0) {
       starStore.splice(k, 1);
     }
-  }
+  }*/
 
   requestAnimationFrame(animatio);
 }
