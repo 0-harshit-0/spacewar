@@ -18,7 +18,7 @@ canvas{
 header{
 	position: relative;
 	margin: 5% 0% 0% 0%;
-	width: 20vmax;
+	width: 30vmax;
 	left: 50%;
 	transform: translateX(-50%);
 	background: lightgray;
