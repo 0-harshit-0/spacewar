@@ -226,13 +226,13 @@ function animatio() {
     location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
-  /*for (let k = 0; k < starStore.length; k++) {
+  for (let k = 0; k < starStore.length; k++) {
     starStore[k].update();
     if (starStore[k].pos.y >= bgcanvas.height || starStore[k].pos.y < 0 ||
         starStore[k].pos.x >= bgcanvas.width || starStore[k].pos.x <= 0) {
       starStore.splice(k, 1);
     }
-  }*/
+  }
 
   requestAnimationFrame(animatio);
 }

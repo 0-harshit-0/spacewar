@@ -335,7 +335,6 @@ class Invaders {
 class SmartInv extends Invaders {
   constructor(x, y, radius, color) {
     super(x, y, radius, color);
-    //this.pos = new Vector2D(x,y);
     this.vel = new Vector2D(2*(Math.random()-0.5), 2*(Math.random()-0.5));
     this.acc = new Vector2D();
   }
@@ -343,10 +342,6 @@ class SmartInv extends Invaders {
     super.draw();
   }
   static attract(mouse, p, g) {
-    //p is the particle or object.
-    //gravitational attraction and repulsion
-    //g is the universal gravity constant. inversely propotional to attaraction
-    //m1 and m2 is mass
     let dir = Vector2D.sub(mouse.pos, p.pos);
     let d = Vector2D.magnitude(dir);
     d = Vector2D.constrain(d, 5, 10);
@@ -357,10 +352,9 @@ class SmartInv extends Invaders {
     return Vector2D.div(dir, mouse.m);
   }
   move() {
-    this.acc = SmartInv.attract(center, this, 0.5);
+    this.acc = SmartInv.attract(shoot, this, 0.15);
     
     this.vel = Vector2D.add(this.acc, this.vel);
-    //console.log(this.acc);
     this.vel = Vector2D.limit(2, this.vel);
     this.pos = Vector2D.add(this.pos, this.vel);
   }
