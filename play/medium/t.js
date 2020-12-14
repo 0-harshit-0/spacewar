@@ -212,7 +212,7 @@ function animatio() {
     cancelAnimationFrame(inter);
     score = 0;
     alert("congratulation captain you did it...");
-    location.assign("https://spacewars.glitch.me/");
+    location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
   if (shoot.life > 0) {
@@ -362,7 +362,7 @@ class SmartInv extends Invaders {
 }
 
 
-let bulletsStore = new Array();
+let bulletsStore = new Queues();
 let store = new Array();
 let particle = new Array();
 let inter,invderInter,timer = 1200;

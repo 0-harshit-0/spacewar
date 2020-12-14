@@ -212,7 +212,7 @@ function animatio() {
     cancelAnimationFrame(inter);
     score = 0;
     alert("congratulation captain you did it...");
-    location.assign("https://spacewarfare.glitch.me/");
+    location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
   if (shoot.life > 0) {
