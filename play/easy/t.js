@@ -74,7 +74,7 @@ let score = 0;
 function scoreAndLife() {
   bgctx.fillStyle = "rgb(250, 250, 0)";
   let size = 30;
-  bgctx.font = size + "px" + " arial";
+  bgctx.font = `${size}px arial`;
   bgctx.fillText(`${score}`, bgcanvas.width/2 - size/2, bgcanvas.height-size);
   //bgctx.fillText(`life: ${shoot.life}`, size, size*2);
 }
@@ -215,7 +215,7 @@ function animatio() {
     location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
-  if (shoot.life) {
+  if (shoot.life > 0) {
     ship.moveAttack();
     shoot.draw();
     shoot.lifeBar();
@@ -223,6 +223,7 @@ function animatio() {
   }else {
     cancelAnimationFrame(inter);
     alert("it's over captain...");
+    shoot.life = 100;
     location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
@@ -274,7 +275,7 @@ class MachineBullets extends Bullets {
   constructor(velocity) {
     super(velocity);
     this.life = 30;
-    this.power = 2;
+    this.power = 1;
   }
   draw() {
     super.draw();
@@ -333,7 +334,7 @@ class Invaders {
   }
 }
 
-let bulletsStore = new Array();
+let bulletsStore = new Queues();
 let store = new Array();
 let particle = new Array();
 let inter,invderInter,timer = 1200;
@@ -377,15 +378,15 @@ function animation() {
     bulletEvent(mouse);
   }
 
-  if (bulletsStore.length) {
-    bulletsStore.forEach(x => {
+  if (bulletsStore.s) {
+    bulletsStore.queuearray.forEach(x => {
       if (x.life) {
         x.draw();
       }else {
+        let temp = bulletsStore.pop();
         for (let p = 0; p < 10; p++) {
-          particle.push(new Particles(x.pos.x, x.pos.y, 1, x.c));
+          particle.push(new Particles(temp.pos.x, temp.pos.y, 1, temp.c));
         }
-        bulletsStore.splice(bulletsStore.indexOf(x), 1);
       }
     });
   }
@@ -394,14 +395,14 @@ function animation() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
   for (let i = 0; i < store.length; i++) {
-    for (let j = 0; j < bulletsStore.length; j++) {
-      let d = Vector2D.distance(bulletsStore[j].pos, store[i].pos);
+    for (let j = 0; j < bulletsStore.s; j++) {
+      let d = Vector2D.distance(bulletsStore.queuearray[j].pos, store[i].pos);
       if (d - store[i].life - 2 <= 0) {
+        let temp = bulletsStore.pop();
         for (let p = 0; p < 10; p++) {
-          particle.push(new Particles(bulletsStore[j].pos.x, bulletsStore[j].pos.y, 1, store[i].c));
+          particle.push(new Particles(temp.pos.x, temp.pos.y, 1, store[i].c));
         }
-        store[i].life -= bulletsStore[j].power;
-        bulletsStore.splice(j, 1);
+        store[i].life -= temp.power;
       }
     }
   }
@@ -463,14 +464,14 @@ function startGame(shipNo) {
       break;
     case '2':
       ship = new MachineGun();
-      reloadTime = 10;
+      reloadTime = 110;
       golistore = (v) => {
         bulletsStore.push(new MachineBullets(v));
       }
       break;
     case '3':
       ship = new Sniper();
-      reloadTime = 1000;
+      reloadTime = 600;
       golistore = (v) => {
         bulletsStore.push(new SniperBullets(v));
       }
