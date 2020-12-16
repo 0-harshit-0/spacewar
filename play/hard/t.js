@@ -3,6 +3,7 @@ for (var i = 0; i < btn.length; i++) {
   btn[i].toggleAttribute("disabled");
 }*/
 
+let mouse = new Vector2D();
 let mobile = false, fire = false;
 (function detec() { 
      
@@ -66,10 +67,9 @@ let bs = new Shapes(bgctx);
 bgcanvas.width = innerWidth;
 bgcanvas.height = innerHeight;
 
-let mouse = new Vector2D();
 let center = new Vector2D(innerWidth/2, innerHeight/2);
-let lifemeter = bgcanvas.width/2-10, elixirMeter = 0;
-let score = 0;
+let lifemeter = bgcanvas.width/2-10, elixirMeter = 0, sup = false;
+let score = 0, tempReload;
 
 function scoreAndLife() {
   bgctx.fillStyle = "rgb(250, 250, 0)";
@@ -100,17 +100,21 @@ class Shooter {
     bs.stroke("rgba(0, 200, 150, 1)");
 
     //elixir
-    elixirMeter = Vector2D.constrain(elixirMeter, 0, this.elixir);   
-    if (elixirMeter > bgcanvas.width/2) {
+    elixirMeter = Vector2D.constrain(elixirMeter, 0, this.elixir*10);   
+    if (elixirMeter > bgcanvas.width/2-10) {
+      sup = true;
       this.elixir = 0;
       elixirMeter = 0;
+      setTimeout(()=> {
+        reloadTime = tempReload;
+        sup = false;
+      }, 5000);
     }
 
     bs.line(bgcanvas.width/2+10, 10, bgcanvas.width/2+10 + elixirMeter++, 10);
     bs.stroke("rgba(0, 200, 0, 1)"); 
   }
   draw() {
-    //console.log(this.pos);
     bs.circle(center.x, center.y, this.r);
     bs.fill("rgb(245, 240, 240)");
   }
@@ -128,7 +132,6 @@ class Assault extends Shooter {
     this.theta = Math.atan2(dir.y, dir.x);
     dir = Vector2D.mul(Vector2D.normalize(dir), this.r / 2);
     this.posp = Vector2D.add(this.pos, dir);
-    //this.posp = Vector2D.limit(100, this.posp);
 
     this.drawAttack();
   }
@@ -146,7 +149,6 @@ class MachineGun extends Shooter {
     this.theta = Math.atan2(dir.y, dir.x);
     dir = Vector2D.mul(Vector2D.normalize(dir), this.r * 1.6);
     this.posp = Vector2D.add(this.pos, dir);
-    //this.posp = Vector2D.limit(100, this.posp);
 
     this.drawAttack();
   }
@@ -215,7 +217,7 @@ function animatio() {
     location.assign("https://0-harshit-0.github.io/spacewarfare/");
   }
 
-  if (shoot.life > 0) {
+  if (shoot.life > 10) {
     ship.moveAttack();
     shoot.draw();
     shoot.lifeBar();
@@ -237,6 +239,7 @@ function animatio() {
 
   requestAnimationFrame(animatio);
 }
+
 
 //================================================================
 
@@ -264,7 +267,7 @@ class Bullets {
 class AssaultBullets extends Bullets {
   constructor(velocity) {
     super(velocity);
-    this.life = 50;
+    this.life = Math.floor(Math.min(canvas.width, canvas.height)/13);
     this.power = 4;
   }
   draw() {
@@ -274,8 +277,8 @@ class AssaultBullets extends Bullets {
 class MachineBullets extends Bullets {
   constructor(velocity) {
     super(velocity);
-    this.life = 30;
-    this.power = 2;
+    this.life = Math.floor(Math.min(canvas.width, canvas.height)/25);
+    this.power = 1;
   }
   draw() {
     super.draw();
@@ -285,7 +288,7 @@ class SniperBullets extends Bullets {
   constructor(velocity) {
     let temp = Vector2D.mul(velocity, 2);
     super(temp);
-    this.life = 70;
+    this.life = Math.floor(Math.min(canvas.width, canvas.height)/10);
     this.power = 10000;
   }
   draw() {
@@ -365,9 +368,8 @@ class SmartInv extends Invaders {
 let bulletsStore = new Queues();
 let store = new Array();
 let particle = new Array();
-let inter,invderInter,timer = 1200;
-let golistore, reloadTime;
-
+let inter,invderInter, golistore, reloadTime, superGolistore;
+const timer = 1200;
 
 function create() {
   let dis = Math.floor(Math.max(canvas.width, canvas.height));
@@ -383,15 +385,16 @@ function create() {
   }
 }
 
-
 //bullets maker===================================
 function bulletEvent(mouse) {
   
   if (shoot.reload) {
     shoot.reload = false;
-    let temp = new Vector2D(mouse.x, mouse.y);
-    let acc = Vector2D.normalize(Vector2D.sub(temp, center));
+    let acc = Vector2D.normalize(Vector2D.sub(mouse, center));
     let velocity = Vector2D.mul(acc, 5);
+    if (sup) {
+      superGolistore(velocity);
+    }
     golistore(velocity);
     setTimeout(()=> {
       shoot.reload = true;
@@ -404,7 +407,6 @@ addEventListener("keypress", e => {
     bulletEvent(mouse);
   }
 });
-
 
 function animation() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -469,7 +471,7 @@ function animati() {
       x.move();
     }else {
       score++;
-      shoot.elixir += x.life;
+      shoot.elixir += x.power;
       store.splice(store.indexOf(x), 1);
     }
 
@@ -493,22 +495,34 @@ function startGame(shipNo) {
     case '1':
       ship = new Assault();
       reloadTime = 300;
+      tempReload = reloadTime;
       golistore = (v) => {
         bulletsStore.push(new AssaultBullets(v));
+      }
+      superGolistore = (v) => {
+        bulletsStore.push(new AssaultBullets(Vector2D.mul(v, -1)));
       }
       break;
     case '2':
       ship = new MachineGun();
-      reloadTime = 110;
+      reloadTime = 100;
+      tempReload = reloadTime;
       golistore = (v) => {
         bulletsStore.push(new MachineBullets(v));
+      }
+      superGolistore = (v) => {
+        bulletsStore.push(new MachineBullets(Vector2D.mul(v, 2)));
       }
       break;
     case '3':
       ship = new Sniper();
       reloadTime = 600;
+      tempReload = reloadTime;
       golistore = (v) => {
         bulletsStore.push(new SniperBullets(v));
+      }
+      superGolistore = (v) => {
+        reloadTime = 300;
       }
       break;
   }
@@ -517,6 +531,3 @@ function startGame(shipNo) {
 
   
   animatio();
-  animation();
-  animati();
-}
