@@ -210,7 +210,7 @@ function animatio() {
   //bgctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
   bgctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-  if (score >= 100) {
+  if (score >= 50) {
     cancelAnimationFrame(inter);
     score = 0;
     alert("congratulation captain you did it...");
