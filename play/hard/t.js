@@ -531,3 +531,6 @@ function startGame(shipNo) {
 
   
   animatio();
+  animation();
+  animati();
+}
