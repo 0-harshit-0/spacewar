@@ -1,3 +1,4 @@
+
 /*let btn = document.querySelectorAll('input');
 for (var i = 0; i < btn.length; i++) {
   btn[i].toggleAttribute("disabled");
@@ -214,7 +215,7 @@ function animatio() {
     cancelAnimationFrame(inter);
     score = 0;
     alert("congratulation captain you did it...");
-    location.assign("https://0-harshit-0.github.io/spacewarfare/");
+    location.assign("https://spacewars.glitch.me/");
   }
 
   if (shoot.life > 10) {
@@ -226,7 +227,7 @@ function animatio() {
     cancelAnimationFrame(inter);
     alert("it's over captain...");
     shoot.life = 100;
-    location.assign("https://0-harshit-0.github.io/spacewarfare/");
+    location.assign("https://spacewars.glitch.me/");
   }
 
   for (let k = 0; k < starStore.length; k++) {
@@ -411,7 +412,7 @@ function animation() {
     bulletEvent(mouse);
   }
 
-  if (bulletsStore.s) {
+  if (bulletsStore.length) {
     bulletsStore.queuearray.forEach(x => {
       if (x.life) {
         x.draw();
@@ -428,7 +429,7 @@ function animation() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
   for (let i = 0; i < store.length; i++) {
-    for (let j = 0; j < bulletsStore.s; j++) {
+    for (let j = 0; j < bulletsStore.length; j++) {
       let d = Vector2D.distance(bulletsStore.queuearray[j].pos, store[i].pos);
       if (d - store[i].life - 2 <= 0) {
         let temp = bulletsStore.pop();
@@ -480,12 +481,8 @@ function animati() {
   requestAnimationFrame(animati);
 }
 
-let heading = document.querySelector('#txt');
-let container = document.querySelector('#container');
 let ship;
 function startGame(shipNo) {
-  heading.style.display = 'none';
-  container.style.display = 'none';
 
   switch(shipNo) {
     case '1':
@@ -529,4 +526,7 @@ function startGame(shipNo) {
   animatio();
   animation();
   animati();
+}
+window.onload = () => {
+  startGame(location.href.split('ship=')[1]);
 }

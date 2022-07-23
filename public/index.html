@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="shortcut icon" href="https://cdn.glitch.com/0b515de7-3e7b-4930-b473-505585f8896a%2Ffavicon.ico?v=1603193676899" type="image/x-icon">
+    <link rel="icon" href="https://cdn.glitch.com/0b515de7-3e7b-4930-b473-505585f8896a%2Ffavicon.ico?v=1603193676899" type="image/x-icon">
+    <link id="favicon" rel="icon" href="https://cdn.glitch.com/0b515de7-3e7b-4930-b473-505585f8896a%2Ffavicon.ico?v=1603193676899" type="image/x-icon">
+    
+    
+    <link rel="canonical" href="https://spacewars.glitch.me/" />
+    <meta name="description" content="Survive this galactic war.">
+    <meta name="google-site-verification" content="v5Q3zfzHlvkdSstuWb3NUTxJr1H7kXo-b163O_ku0dQ" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="game">
+    <title>Space Wars</title>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/utility.min.js" defer="true"></script>
+    
+    <script type="text/javascript" src="script.js" defer="true"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <header>
+    </header>
+
+    <main class="wrap">
+      <div class="header">
+        <button id="backBtn" class="navBtn bg" onclick="location.reload();">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+              <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+          </svg>
+        </button>
+        <h1 id="h" class="bg">Space Warfare</h1>
+        <button id="randBtn" class="navBtn bg" onclick="goto(Math.floor(Math.random()*3)+1);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+            <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+          </svg>
+        </button>
+      </div>
+
+      <p id="about" class="des bg">
+        A war is going on captain. Your space ship got damaged in crossfire and
+        as a result has lost it's course. Now you are somewhere in enemy's
+        territory. Your orders are to retreat and meet at the mutual point, Hope
+        you will make it alive...
+      </p>
+          
+      <section id="levelContainer" class="lvls">
+        <span class="modes bg">Easy</span>
+        <span class="modes bg">Medium</span>
+        <span class="modes bg">Hard</span>
+      </section>
+
+      <!-- hidden start -->
+
+      <div id="container" class="shipContainer">
+        <section onclick="goto(1)" class="ships bg">
+          <img class="imgs" src="https://cdn.glitch.com/c23ef1f2-271f-4b88-bc5d-d0a8591322e4%2FbasicShadow.png?v=1629791103042">
+          <h3 class="shipName">Assault</h3>
+
+          <div class="desc">
+            <section>
+              <span>
+                DAMAGE
+              </span>
+              <span>4</span>
+            </section>
+            <section>
+              <span>
+                RANGE
+              </span>
+              <span>50</span>
+            </section>
+            <section>
+              <span>
+                RELOAD
+              </span>
+              <span>300ms</span>
+            </section>
+            <section>
+              <span>
+                SPECIAL
+              </span>
+              <span>Fire bullets from every angle for 3 seconds.</span>
+            </section>
+          </div>
+          
+        </section>
+        <section onclick="goto(2)" class="ships bg">
+          <img class="imgs" src="https://cdn.glitch.com/c23ef1f2-271f-4b88-bc5d-d0a8591322e4%2FsmgShadow.png?v=1629791103095">
+          <h3 class="shipName">SMG</h3>
+
+          <div class="desc">
+            <section>
+              <span>
+                DAMAGE
+              </span>
+              <span>2</span>
+            </section>
+            <section>
+              <span>
+                RANGE
+              </span>
+              <span>30</span>
+            </section>
+            <section>
+              <span>
+                RELOAD
+              </span>
+              <span>10ms</span>
+            </section>
+            <section>
+              <span>
+                SPECIAL
+              </span>
+              <span>Range is twice the original for 5 seconds.</span>
+            </section>
+          </div>
+          
+        </section>
+        <section onclick="goto(3)" class="ships bg">
+          <img class="imgs" src="https://cdn.glitch.com/c23ef1f2-271f-4b88-bc5d-d0a8591322e4%2FsniperShadow.png?v=1629791103042">
+          <h3 class="shipName">Sniper</h3>
+
+          <div class="desc">
+            <section>
+              <span>
+                DAMAGE
+              </span>
+              <span>100</span>
+            </section>
+            <section>
+              <span>
+                RANGE
+              </span>
+              <span>80</span>
+            </section>
+            <section>
+              <span>
+                RELOAD
+              </span>
+              <span>1000ms</span>
+            </section>
+            <section>
+              <span>
+                SPECIAL
+              </span>
+              <span>The next 5 bullets can penetrate through anything.</span>
+            </section>
+          </div>
+          
+        </section>
+      </div>
+
+    </main>
+    
+  </body>
+</html>
