@@ -1,7 +1,4 @@
-@font-face {
-  font-family: sometype;
-  src: url('../assets/mono/fonts/woff2-cffbased/SometypeMono-Regular.woff2') format('woff2');
-}
+
 ::root {
   --lb: rgba(50, 50, 50, 0.8);
 }
