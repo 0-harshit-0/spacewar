@@ -1,46 +1,39 @@
-
 const heading = document.querySelector("#h");
-const back = document.querySelector("#backBtn");
-const rand = document.querySelector("#randBtn");
-const des = document.querySelector("#about");
-const lvls = document.querySelector("#levelContainer");
-const mds = document.querySelectorAll(".modes");
-const shipCont = document.querySelector("#container");
+const wrap = document.querySelector(".wrap");
+const modes = document.querySelectorAll(".modes");
+
+const shipContainerTemplate = document.querySelector("#shipContainer");
+
+const backBtn = document.querySelector("#backBtn");
+const randBtn = document.querySelector("#randBtn");
+
 let mode = 0;
 
-for(let i = 0; i < mds.length; i++) {
-	mds[i].onclick = () => {
-    mode = i+1;
-    
-		des.style.display = "none";
-		lvls.style.display = "none";
-		mds.forEach(y => {
-			y.style.display = "none";
-		});
+for(let i = 0; i < modes.length; i++) {
+	modes[i].addEventListener("click", (e)=> {
+    mode = e.target.ariaLabel;
 
-		heading.innerHTML = "Select your ship";
-		shipCont.style.display = "flex";
-		back.style.visibility = "visible";
-		rand.style.visibility = "visible";
-	}
+    heading.innerHTML = "Select your ship";
+    wrap.innerHTML = '';
+
+    const clone = shipContainerTemplate.content.cloneNode(true);
+    wrap.appendChild(clone);
+
+    backBtn.style.visibility = "visible";
+    randBtn.style.visibility = "visible";
+	});
 }
 
 function goto(ship) {
-  switch(mode) {
-    case 1:      
-      location.assign(`/play?mode=easy&ship=${ship}`);
-      break;
-    case 2:
-      location.assign(`/play?mode=medium&ship=${ship}`);
-      break;
-    case 3:
-      location.assign(`/play?mode=hard&ship=${ship}`);
-      break;
-    default:
-      location.assign("/");
-      break;
-  }
+  location.assign(`/play?mode=${mode}&ship=${ship}`);
 }
+
+backBtn.addEventListener("click", ()=> {
+	location.reload();
+});
+randBtn.addEventListener("click", ()=> {
+	goto(Math.floor(Math.random()*modes.length)+1);
+});
 //canvas========================
 
 const bgcanvas = document.querySelector('#canvas');
@@ -70,8 +63,8 @@ class Circle {
 		this.color = "rgb(255, 255, 255)";
 	}
 	draw() {
-		s.circle(this.pos.x, this.pos.y, this.r);
-		s.fill('white');
+		s.ellipse("", this.pos.x, this.pos.y, this.r);
+		s.fill("", 'white');
 
 	}
 	update() {

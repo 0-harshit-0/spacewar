@@ -1,7 +1,9 @@
 const express = require("express");
+const routes = require("./routes/routes.js");
 const app = express();
 
 
+// route everything to https
 function checkHttps(req, res, next){
   // protocol check, if http, redirect to https
   
@@ -13,21 +15,10 @@ function checkHttps(req, res, next){
     res.redirect('https://' + req.hostname + req.url);
   }
 }
-
 //app.all('*', checkHttps);
 
-app.use(express.static('public'));
-app.use(express.static('play'));
-
-app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/public/index.html');
-});
-
-app.get('/play', (req, res) => {
-	res.sendFile(__dirname + `/play/${req.query.mode}/index.html`, (err) => {
-    if (err) console.log("try again");
-  });
-});
+app.use(express.static('views'));
+app.use("/", routes);
 
 
 // listen for requests :)
