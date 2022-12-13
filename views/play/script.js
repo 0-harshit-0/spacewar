@@ -3,21 +3,21 @@
 // =============== variables ======================
 let config, inter;
 
-// score canvas
-let lifeMeter = 100, elixirMeter = 0, score = 0;
-let starStore = new Array();
-
-
 // player canvas
 let ship;
 
-
 //bullet canvas
 const bulletsStore = new Array();
-const invaderStore = new Array();
 const particleArray = new Array();
-let invade = true, invderIntervalId, golistore, superGolistore;
+let golistore, superGolistore;
 
+// invader canvas
+let invade = true, invderIntervalId;
+const invaderStore = new Array();
+
+// score canvas
+let lifeMeter = 100, elixirMeter = 0, score = 0;
+let starStore = new Array();
 
 // ===================== player ship classes ===========================
 
@@ -41,6 +41,22 @@ class Shooter {
   drawBase() {
     playerShape.circle(this.pos.x, this.pos.y, this.r);
     playerShape.fill(this.c);
+  }
+  fire() {
+    this.reload = false;
+
+    let dir = Vector2D.normalize(Vector2D.sub(mouse, this.pos));
+    //let life = Math.floor(Math.min(bulletCanvas.width, bulletCanvas.height)/13);
+
+    if (this.super) {
+      superGolistore(dir);
+    }else {
+      golistore(dir);
+    }
+
+    setTimeout(()=> {
+      this.reload = true;
+    }, this.reloadTime);
   }
 }
 // turrents
@@ -239,29 +255,13 @@ function playerAnimation() {
 
 
 
-function bulletFire() {
-  ship.reload = false;
-
-  let dir = Vector2D.normalize(Vector2D.sub(mouse, center));
-  //let life = Math.floor(Math.min(bulletCanvas.width, bulletCanvas.height)/13);
-
-  if (ship.super) {
-    superGolistore(dir);
-  }else {
-    golistore(dir);
-  }
-
-  setTimeout(()=> {
-    ship.reload = true;
-  }, ship.reloadTime);
-}
 
 function bulletAnimation() {
   //bulletCtx.setTransform(1, 0, 0, 1, 0, 0);
   bulletCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 
   if (fire && ship.reload) {
-    bulletFire();
+    ship.fire();
   }
 
   for(let i = bulletsStore.length-1; i >= 0; i--) {
@@ -292,6 +292,7 @@ function bulletAnimation() {
     }
   }
 
+  // animate the particles
   for (let i = particleArray.length-1; i >= 0; i--) {
     let x = particleArray[i];
 
@@ -358,14 +359,14 @@ function invaderAnimation() {
 
 
 function lifeAndElixirBar() {
-  scoreCtx.lineWidth = 10;
-  scoreCtx.lineCap = "round";
+  scoreCtx.lineWidth = 50;
+  // make it more visible
 
   //life
   if (lifeMeter > ship.life) {
     lifeMeter--;
   }
-  scoreShape.line(10, 10, lifeMeter, 10);
+  scoreShape.line(10, 20, lifeMeter, 20);
   scoreShape.stroke("rgba(0, 200, 150, 1)");
 
   //elixir
@@ -415,14 +416,14 @@ function scoreAnimation() {
     location.assign("/");
   }
 
-  for (let k = starStore.length-1; k >= 0; k--) {
+  /*for (let k = starStore.length-1; k >= 0; k--) {
     starStore[k].move();
 
     if (starStore[k].pos.y >= canvasHeight || starStore[k].pos.y < 0 ||
         starStore[k].pos.x >= canvasWidth || starStore[k].pos.x <= 0) {
       starStore.splice(k, 1);
     }
-  }
+  }*/
 }
 
 
@@ -481,7 +482,7 @@ async function startGame(mode, shipId) {
   inter = setInterval(()=> {
     playerAnimation();
     bulletAnimation();
-    invaderAnimation();
+    //invaderAnimation();
     scoreAnimation();
   });
 }

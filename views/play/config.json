@@ -7,10 +7,10 @@
 			"1": {
 				"name": "assault",
 				"bullet": {
-					"life": 300,
+					"life": 150,
 					"damage": 4,
 					"penetrate": 0,
-					"speed": 10
+					"speed": 2
 				},
 				"easy": {
 					"life": 100,
@@ -18,20 +18,20 @@
 				},
 				"medium": {
 					"life": 80,
-					"reloadTime": 250
+					"reloadTime": 275
 				},
 				"hard": {
 					"life": 60,
-					"reloadTime": 200
+					"reloadTime": 250
 				}
 			},
 			"2": {
 				"name": "machine gun",
 				"bullet": {
-					"life": 100,
+					"life": 70,
 					"damage": 1,
 					"penetrate": 0,
-					"speed": 20
+					"speed": 2
 				},
 				"easy": {
 					"life": 150,
@@ -39,32 +39,32 @@
 				},
 				"medium": {
 					"life": 120,
-					"reloadTime": 80
+					"reloadTime": 90
 				},
 				"hard": {
 					"life": 90,
-					"reloadTime": 60
+					"reloadTime": 80
 				}
 			},
 			"3": {
 				"name": "sniper",
 				"bullet": {
-					"life": 9999999999999999,
+					"life": 300,
 					"damage": 999999999999999999,
 					"penetrate": 0,
-					"speed": 40
+					"speed": 2
 				},
 				"easy": {
 					"life": 70,
-					"reloadTime": 600
+					"reloadTime": 700
 				},
 				"medium": {
 					"life": 60,
-					"reloadTime": 550
+					"reloadTime": 650
 				},
 				"hard": {
 					"life": 50,
-					"reloadTime": 500
+					"reloadTime": 600
 				}
 			}
 		}
