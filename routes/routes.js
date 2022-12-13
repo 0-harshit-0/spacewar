@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 
 // play
 router.get('/play', (req, res) => {
-	res.sendFile(path.join(__dirname + `/../views/play/${req.query.mode}/index.html`), (err) => {
+	res.sendFile(path.join(__dirname + `/../views/play/index.html`), (err) => {//${req.query.mode}/
 		if (err) console.log("try again");
 	});
 });

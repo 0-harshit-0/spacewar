@@ -1,0 +1,21 @@
+body{
+	margin: 0px;
+	overscroll-behavior: none;
+	background: black;
+}
+*{
+	font-family: 'Russo One', sans-serif;
+	user-select: none;
+}
+
+canvas{
+	-webkit-transform3d: translate(0,0,0);
+	-moz-transform3d: translate(0,0,0);
+	transform3d: translate(0,0,0);
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	background: transparent;
+}

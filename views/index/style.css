@@ -52,7 +52,7 @@ code {
 #root, #__next {
   isolation: isolate;
 }
-canvas{
+canvas {
   -webkit-transform3d: translate(0,0,0);
   -moz-transform3d: translate(0,0,0);
   transform3d: translate(0,0,0);
@@ -67,7 +67,7 @@ canvas{
 
 
 /* used for styling all the blocks */
-.blocks{
+.blocks {
 	padding-block: 1%;
 	padding-inline: 2%;
 	border-radius: 5px;
@@ -94,7 +94,7 @@ header nav {
 header nav h1 {
 	font-size: 1.5rem;
 }
-header nav .navBtn {
+header nav .nav-btn {
 	visibility: hidden;
 }
 
@@ -121,7 +121,7 @@ header nav .navBtn {
 
  /* ============== hidden ============== */
 
-.shipContainer {
+.ship-container {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -143,15 +143,15 @@ header nav .navBtn {
 }
 
 
-.imgs{
+.imgs {
 	width: 40%;
 }
-.shipName{
+.ship-name {
 	font-size: .7rem;
 	text-decoration: underline;
 	margin-block: 0 5%;
 }
-.desc{
+.desc {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;

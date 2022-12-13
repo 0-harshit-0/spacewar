@@ -2,10 +2,10 @@ const heading = document.querySelector("#h");
 const wrap = document.querySelector(".wrap");
 const modes = document.querySelectorAll(".modes");
 
-const shipContainerTemplate = document.querySelector("#shipContainer");
+const shipContainerTemplate = document.querySelector("#ship-container-template");
 
-const backBtn = document.querySelector("#backBtn");
-const randBtn = document.querySelector("#randBtn");
+const backBtn = document.querySelector("#back-btn");
+const randBtn = document.querySelector("#rand-btn");
 
 let mode = 0;
 
@@ -34,18 +34,17 @@ backBtn.addEventListener("click", ()=> {
 randBtn.addEventListener("click", ()=> {
 	goto(Math.floor(Math.random()*modes.length)+1);
 });
-//canvas========================
 
-const bgcanvas = document.querySelector('#canvas');
-const bgctx = bgcanvas.getContext('2d');
-let s = new Shapes(bgctx);
+
+//canvas========================
+const bgCanvas = document.querySelector('#canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let s = new Shapes(bgCtx), frameID = null;
 
 let timeout = false;
-bgcanvas.width = innerWidth;
-bgcanvas.height = innerHeight;
 function getDimensions() {
-	bgcanvas.width = innerWidth;
-	bgcanvas.height = innerHeight;
+	bgCanvas.width = innerWidth;
+	bgCanvas.height = innerHeight;
 	main()
 }
 addEventListener('resize', function(e) {  //debounce
@@ -73,22 +72,24 @@ class Circle {
 	}
 }
 
-function animatio(arr) {
-	bgctx.clearRect(0, 0, innerWidth, innerHeight);
+function animation(arr) {
+	bgCtx.clearRect(0, 0, innerWidth, innerHeight);
 
-	for (var k = 0; k < arr.length; k++){
+	for (var k = arr.length-1; k >= 0; k--){
 		let z = arr[k];
-		z.update();
-		if (z.pos.y >= bgcanvas.height || z.pos.y < 0 || z.pos.x >= bgcanvas.width || z.pos.x <= 0) {
+
+		if (z.pos.y >= bgCanvas.height || z.pos.y < 0 || z.pos.x >= bgCanvas.width || z.pos.x <= 0) {
 			arr.splice(k, 1);
+		}else {
+			z.update();
 		}
 	}
 
-	frameID = requestAnimationFrame(()=> {animatio(arr)});
+	frameID = requestAnimationFrame(()=> {animation(arr)});
 }
 
 function main() {
-	let carray = new Array(), frameID = null;
+	let tempArray = new Array();
 
 	for (var i = 0; i < 1000; i++) {
 		var radius = Math.random()/2;
@@ -96,7 +97,7 @@ function main() {
 		var y = Math.random() * (innerHeight - radius * 2);
 		var dx = (Math.random()-0.5)/5;
 		var dy = (Math.random()-0.5)/5;
-		carray.push(new Circle(x, y, dx, dy, radius));
+		tempArray.push(new Circle(x, y, dx, dy, radius));
 	}
 
 	if (frameID != null) {
@@ -104,6 +105,6 @@ function main() {
 		frameID = null;
 	}
 
-	animatio(carray);
+	animation(tempArray);
 }
-main();
+getDimensions();

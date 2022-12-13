@@ -7,7 +7,7 @@ const app = express();
 function checkHttps(req, res, next){
   // protocol check, if http, redirect to https
   
-  if(req.get('X-Forwarded-Proto').indexOf("https") !=- 1){
+  if(req.get('X-Forwarded-Proto').indexOf("https") !=- 1) {
     console.log("https, yo")
     return next()
   } else {
