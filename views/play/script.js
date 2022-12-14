@@ -7,13 +7,10 @@ let config, inter;
 let ship;
 
 //bullet canvas
-const bulletsStore = new Array();
-const particleArray = new Array();
 let golistore, superGolistore;
 
 // invader canvas
 let invade = true, invderIntervalId;
-const invaderStore = new Array();
 
 // score canvas
 let lifeMeter = 100, elixirMeter = 0, score = 0;
@@ -482,14 +479,14 @@ async function startGame(mode, shipId) {
   inter = setInterval(()=> {
     playerAnimation();
     bulletAnimation();
-    //invaderAnimation();
+    invaderAnimation();
     scoreAnimation();
   });
 }
 
 
 window.onload = async () => {
-  let res = await fetch("/play/config.json");
+  let res = await fetch("/config.json");
   config = await res.json();
 
   let uri = await new URL(location.href);

@@ -45,7 +45,8 @@ if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i)
 
 // screen resize events...
 let timeout = false;
-let canvasWidth, canvasHeight;
+let canvasWidth = innerWidth, canvasHeight = innerHeight;
+let center = new Vector2D(canvasWidth/2, canvasHeight/2);
 
 function getDimensions() {
   canvasWidth = innerWidth;
@@ -62,6 +63,8 @@ function getDimensions() {
 
   scoreCanvas.width = canvasWidth;
   scoreCanvas.height = canvasHeight;
+
+  center = new Vector2D(canvasWidth/2, canvasHeight/2);
 }
 addEventListener('resize', function(e) {  //debounce
   clearTimeout(timeout);

@@ -88,7 +88,7 @@
 
     <template id="ship-container-template">
       <div class="ship-container">
-        <div onclick="goto(1)" class="ships blocks">
+        <div onclick="goto(1)" aria-label="1" class="ships blocks">
           <img class="imgs" src="https://cdn.glitch.com/c23ef1f2-271f-4b88-bc5d-d0a8591322e4%2FbasicShadow.png?v=1629791103042">
           <h3 class="ship-name">Assault</h3>
 
@@ -97,30 +97,30 @@
               <span>
                 DAMAGE
               </span>
-              <span>4</span>
+              <span aria-label="damage">0</span>
             </section>
             <section>
               <span>
                 RANGE
               </span>
-              <span>50</span>
+              <span aria-label="range">0</span>
             </section>
             <section>
               <span>
                 RELOAD
               </span>
-              <span>300ms</span>
+              <span aria-label="reloadTime">0ms</span>
             </section>
             <section>
               <span>
                 SPECIAL
               </span>
-              <span>Fire bullets from back side, for 3 seconds.</span>
+              <span>Fire bullets from back side, for 5 seconds.</span>
             </section>
           </div>
           
         </div>
-        <div onclick="goto(2)" class="ships blocks">
+        <div onclick="goto(2)" aria-label="2" class="ships blocks">
           <img class="imgs" src="https://cdn.glitch.com/c23ef1f2-271f-4b88-bc5d-d0a8591322e4%2FsmgShadow.png?v=1629791103095">
           <h3 class="ship-name">SMG</h3>
 
@@ -129,19 +129,19 @@
               <span>
                 DAMAGE
               </span>
-              <span>2</span>
+              <span aria-label="damage">0</span>
             </section>
             <section>
               <span>
                 RANGE
               </span>
-              <span>30</span>
+              <span aria-label="range">0</span>
             </section>
             <section>
               <span>
                 RELOAD
               </span>
-              <span>10ms</span>
+              <span aria-label="reloadTime">0ms</span>
             </section>
             <section>
               <span>
@@ -152,7 +152,7 @@
           </div>
           
         </div>
-        <div onclick="goto(3)" class="ships blocks">
+        <div onclick="goto(3)" aria-label="3" class="ships blocks">
           <img class="imgs" src="https://cdn.glitch.com/c23ef1f2-271f-4b88-bc5d-d0a8591322e4%2FsniperShadow.png?v=1629791103042">
           <h3 class="ship-name">Sniper</h3>
 
@@ -161,25 +161,25 @@
               <span>
                 DAMAGE
               </span>
-              <span>100</span>
+              <span aria-label="damage">0</span>
             </section>
             <section>
               <span>
                 RANGE
               </span>
-              <span>80</span>
+              <span aria-label="range">0</span>
             </section>
             <section>
               <span>
                 RELOAD
               </span>
-              <span>1000ms</span>
+              <span aria-label="reloadTime">0ms</span>
             </section>
             <section>
               <span>
                 SPECIAL
               </span>
-              <span>The next 5 bullets can penetrate through any invader.</span>
+              <span>Bullets can penetrate through any invader, for 5 seconds.</span>
             </section>
           </div>
           

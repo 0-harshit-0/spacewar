@@ -14,13 +14,25 @@ for(let i = 0; i < modes.length; i++) {
     mode = e.target.ariaLabel;
 
     heading.innerHTML = "Select your ship";
-    wrap.innerHTML = '';
-
-    const clone = shipContainerTemplate.content.cloneNode(true);
-    wrap.appendChild(clone);
 
     backBtn.style.visibility = "visible";
     randBtn.style.visibility = "visible";
+    wrap.innerHTML = '';
+
+    fetch("/config.json").then(async res => {
+    	const config = await res.json();
+
+    	const clone = shipContainerTemplate.content.cloneNode(true);
+    	wrap.appendChild(clone);
+			const ships = wrap.querySelectorAll(".ships");
+
+    	ships.forEach(z => {
+    		z.querySelector('[aria-label="damage"]').innerText = config.ship.type[z.ariaLabel].bullet.damage;
+    		z.querySelector('[aria-label="range"]').innerText = config.ship.type[z.ariaLabel].bullet.life;
+    		z.querySelector('[aria-label="reloadTime"]').innerText = config.ship.type[z.ariaLabel][mode].reloadTime+"ms";
+    	});
+    });
+    
 	});
 }
 
