@@ -33,6 +33,18 @@ if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i)
   addEventListener("keydown", e => {
     if (e.key == 'q' || e.key == 'Q') {
       fire = true;
+    }else if (e.key == 'p'|| e.key == 'P') {
+      if (inter) {
+        clearInterval(inter);
+        inter = false;
+      }else {
+        inter = setInterval(()=> {
+          playerAnimation();
+          bulletAnimation();
+          invaderAnimation();
+          scoreAnimation();
+        });
+      }
     }
   });
   addEventListener("keyup", e => {

@@ -1,7 +1,7 @@
 // reloadTime: milliseconds
 
 // =============== variables ======================
-let config, inter;
+let config, inter, gameMode, shipId;
 
 // player canvas
 let ship;
@@ -205,22 +205,52 @@ class Invaders {
 
     this.pos = new Vector2D(x, y);
     this.dir = new Vector2D();
+    this.vel = new Vector2D();
 
     this.damage = damage;
 
     this.c = color;
   }
-  draw() {
-    this.theta = Math.atan2(this.dir.y, this.dir.x);
-    invaderShape.complex(this.life, this.pos.x, this.pos.y, this.m, this.theta);
+  draw(theta) {
+    invaderShape.complex(this.life, this.pos.x, this.pos.y, this.m, theta);
     invaderShape.fill(this.c);
   }
   move() {
     this.dir = Vector2D.sub(center, this.pos);
-    let vel = Vector2D.limit(this.speed, this.dir);
-    this.pos = Vector2D.add(this.pos, vel);
+    this.vel = Vector2D.limit(this.speed, this.dir);
+    this.pos = Vector2D.add(this.pos, this.vel);
 
-    this.draw();
+    let theta = Math.atan2(this.vel.y, this.vel.x);
+    this.draw(theta);
+  }
+}
+
+class SmartInvaders extends Invaders {
+  constructor(x, y, life, mass, damage, speed, elixir, color) {
+    super(x, y, life, mass, damage, speed, elixir, color);
+
+    this.vel = new Vector2D(2*(Math.random()-0.5), 2*(Math.random()-0.5));
+    this.acc = new Vector2D();
+  }
+  static attract(mouse, p, g) {
+    let dir = Vector2D.sub(mouse.pos, p.pos);
+    let d = Vector2D.magnitude(dir);
+    d = Vector2D.constrain(d, 5, 10);
+    dir = Vector2D.normalize(dir);
+    let force = (g * p.m * mouse.m) / (d * d);
+    dir = Vector2D.mul(dir, force);
+
+    return Vector2D.div(dir, mouse.m);
+  }
+  move() {
+    this.acc = SmartInvaders.attract(ship, this, 0.15);
+    this.vel = Vector2D.add(this.acc, this.vel);
+    this.vel = Vector2D.limit(2, this.vel);
+
+    this.pos = Vector2D.add(this.pos, this.vel);
+
+    let theta = Math.atan2(this.acc.x, this.acc.y);
+    this.draw(theta);
   }
 }
 
@@ -316,6 +346,9 @@ function createInvaders() {
   
   //x, y, life, mass, damage, speed, color
   invaderStore.push(new Invaders(xp, yp, radii, ic["1"].mass, ic["1"].damage, ic["1"].speed, ic["1"].elixir, colour));
+  if (gameMode != "easy") {
+    invaderStore.push(new SmartInvaders(xp, yp, radii, ic["1"].mass, ic["1"].damage, ic["1"].speed, ic["1"].elixir, colour));
+  }
 }
 
 function invaderAnimation() {
@@ -427,7 +460,7 @@ function scoreAnimation() {
 
 
 
-async function startGame(mode, shipId) {
+async function startGame() {
   let sc = config.ship;
 
   for (let i = 0; i < 1000; i++) {
@@ -442,7 +475,7 @@ async function startGame(mode, shipId) {
   switch(shipId) {
     case '1':
       //mass, radius, color, life
-      ship = new Assault(sc.mass, sc.radius, sc.color, sc.type[shipId][mode].life, sc.type[shipId][mode].reloadTime);
+      ship = new Assault(sc.mass, sc.radius, sc.color, sc.type[shipId][gameMode].life, sc.type[shipId][gameMode].reloadTime);
 
       golistore = (v) => {
         bulletsStore.push(new AssaultBullets(v, sc.type[shipId].bullet.speed, sc.type[shipId].bullet.life, sc.type[shipId].bullet.damage));
@@ -452,7 +485,7 @@ async function startGame(mode, shipId) {
       }
       break;
     case '2':
-      ship = new MachineGun(sc.mass, sc.radius, sc.color, sc.type[shipId][mode].life, sc.type[shipId][mode].reloadTime);
+      ship = new MachineGun(sc.mass, sc.radius, sc.color, sc.type[shipId][gameMode].life, sc.type[shipId][gameMode].reloadTime);
 
       golistore = (v) => {
         bulletsStore.push(new MachineBullets(v, sc.type[shipId].bullet.speed, sc.type[shipId].bullet.life, sc.type[shipId].bullet.damage));
@@ -462,7 +495,7 @@ async function startGame(mode, shipId) {
       }
       break;
     case '3':
-      ship = new Sniper(sc.mass, sc.radius, sc.color, sc.type[shipId][mode].life, sc.type[shipId][mode].reloadTime);
+      ship = new Sniper(sc.mass, sc.radius, sc.color, sc.type[shipId][gameMode].life, sc.type[shipId][gameMode].reloadTime);
 
       golistore = (v) => {
         bulletsStore.push(new SniperBullets(v, sc.type[shipId].bullet.speed, sc.type[shipId].bullet.life, sc.type[shipId].bullet.damage));
@@ -490,5 +523,7 @@ window.onload = async () => {
   config = await res.json();
 
   let uri = await new URL(location.href);
-  startGame(uri.searchParams.get("mode"), uri.searchParams.get("ship"));
+  gameMode = uri.searchParams.get("mode");
+  shipId = uri.searchParams.get("ship");
+  startGame();
 }

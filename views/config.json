@@ -29,7 +29,7 @@
 				"name": "machine gun",
 				"bullet": {
 					"life": 70,
-					"damage": 1,
+					"damage": 2,
 					"penetrate": 0,
 					"speed": 2
 				},
@@ -75,8 +75,8 @@
 			"1": {
 				"name": "penta",
 				"mass": 5,
-				"damage": 20,
-				"speed": 0.8,
+				"damage": 10,
+				"speed": 0.7,
 				"elixir": 10
 			}
 		}
