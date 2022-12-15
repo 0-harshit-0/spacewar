@@ -110,7 +110,7 @@ class Sniper extends Shooter {
     playerShape.fill(this.c);
   }
   moveTurrent() {
-    let dir = Vector2D.sub(mouse, center);
+    let dir = Vector2D.sub(center, mouse);
     this.theta = Math.atan2(dir.y, dir.x);
     dir = Vector2D.mul(Vector2D.normalize(dir), this.r * 1.1);
     this.posp = Vector2D.add(this.pos, dir);
@@ -217,8 +217,8 @@ class Invaders {
   }
   move() {
     this.dir = Vector2D.sub(center, this.pos);
-    this.vel = Vector2D.limit(this.speed, this.dir);
-    this.pos = Vector2D.add(this.pos, this.vel);
+    let vel = Vector2D.limit(this.speed, this.dir);
+    this.pos = Vector2D.add(this.pos, vel);
 
     this.draw();
   }
