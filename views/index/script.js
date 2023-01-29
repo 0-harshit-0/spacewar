@@ -51,7 +51,7 @@ randBtn.addEventListener("click", ()=> {
 //canvas========================
 const bgCanvas = document.querySelector('#canvas');
 const bgCtx = bgCanvas.getContext('2d');
-let s = new Shapes(bgCtx), frameID = null;
+let frameID = null;
 
 let timeout = false;
 function getDimensions() {
@@ -74,9 +74,11 @@ class Circle {
 		this.color = "rgb(255, 255, 255)";
 	}
 	draw() {
-		s.ellipse("", this.pos.x, this.pos.y, this.r);
-		s.fill("", 'white');
-
+		bgCtx.beginPath();
+		bgCtx.fillStyle = "white";
+		bgCtx.arc(this.pos.x, this.pos.y, this.r, 0, 2*Math.PI)
+		bgCtx.fill();
+		bgCtx.closePath();
 	}
 	update() {
 		this.pos = Vector2D.add(this.pos, this.vel);
@@ -85,7 +87,7 @@ class Circle {
 }
 
 function animation(arr) {
-	bgCtx.clearRect(0, 0, innerWidth, innerHeight);
+	bgCtx.clearRect(0, 0, canvas.width, canvas.height);
 
 	for (var k = arr.length-1; k >= 0; k--){
 		let z = arr[k];
@@ -105,8 +107,8 @@ function main() {
 
 	for (var i = 0; i < 1000; i++) {
 		var radius = Math.random()/2;
-		var x = Math.random() * (innerWidth - radius * 2);
-		var y = Math.random() * (innerHeight - radius * 2);
+		var x = Math.random() * (canvas.width - radius * 2);
+		var y = Math.random() * (canvas.height - radius * 2);
 		var dx = (Math.random()-0.5)/5;
 		var dy = (Math.random()-0.5)/5;
 		tempArray.push(new Circle(x, y, dx, dy, radius));

@@ -1,7 +1,7 @@
 // reloadTime: milliseconds
 
 // =============== variables ======================
-let config, inter, gameMode, shipId;
+let config, inter, gameMode;
 
 // player canvas
 let ship;
@@ -13,7 +13,7 @@ let golistore, superGolistore;
 let invade = true, invderIntervalId;
 
 // score canvas
-let lifeMeter = 100, elixirMeter = 0, score = 0;
+let lifeMeter = 0, elixirMeter = 0, score = 0;
 let starStore = new Array();
 
 // ===================== player ship classes ===========================
@@ -34,10 +34,12 @@ class Shooter {
     this.reload = true;
     this.super = false;
     this.reloadTime = reloadTime;
+
+    lifeMeter = life;
   }
   drawBase() {
-    playerShape.circle(this.pos.x, this.pos.y, this.r);
-    playerShape.fill(this.c);
+    playerShape.ellipse({x: this.pos.x, y: this.pos.y, radius: this.r});
+    playerShape.fill({color: this.c});
   }
   fire() {
     this.reload = false;
@@ -64,8 +66,8 @@ class Assault extends Shooter {
     this.posp = new Vector2D();
   }
   drawTurrent() {
-    playerShape.ellipse(this.posp.x, this.posp.y, this.r*1.7, this.r/2, 0, Math.PI*2, this.theta);
-    playerShape.fill(this.c);
+    playerShape.ellipse({x: this.posp.x, y: this.posp.y, xRadius: this.r*1.7, yRadius: this.r/2, rotation: this.theta});
+    playerShape.fill({color: this.c});
   }
   moveTurrent() {
     let dir = Vector2D.sub(mouse, this.pos);
@@ -84,8 +86,8 @@ class MachineGun extends Shooter {
     this.posp = new Vector2D();
   }
   drawTurrent() {
-    playerShape.ellipse(this.posp.x, this.posp.y, this.r*0.9, this.r*0.9, 0, Math.PI, this.theta+(90*Math.PI/180));
-    playerShape.fill(this.c);
+    playerShape.ellipse({x: this.posp.x, y: this.posp.y, xRadius: this.r*0.9, yRadius: this.r*0.9, endAngle: Math.PI, rotation: this.theta+(90*Math.PI/180)});
+    playerShape.fill({color: this.c});
   }
   moveTurrent() {
     let dir = Vector2D.sub(mouse, center);
@@ -104,10 +106,10 @@ class Sniper extends Shooter {
     this.posp = new Vector2D();
   }
   drawTurrent() {
-    playerShape.ellipse(this.posp.x, this.posp.y, this.r*1.7, this.r/2, 0, Math.PI*2, this.theta);
-    playerShape.fill(this.c);
-    playerShape.ellipse(this.posp.x, this.posp.y, this.r*0.9, this.r*0.9, 0, Math.PI, this.theta+(90*Math.PI/180));
-    playerShape.fill(this.c);
+    playerShape.ellipse({x: this.posp.x, y: this.posp.y, xRadius: this.r*1.7, yRadius: this.r/2, endAngle: Math.PI*2, rotation: this.theta});
+    playerShape.fill({color: this.c});
+    playerShape.ellipse({x: this.posp.x, y: this.posp.y, xRadius: this.r*0.9, yRadius: this.r*0.9, endAngle: Math.PI,  rotation: this.theta+(90*Math.PI/180)});
+    playerShape.fill({color: this.c});
   }
   moveTurrent() {
     let dir = Vector2D.sub(center, mouse);
@@ -135,8 +137,8 @@ class Bullets {
     this.c = "white";
   }
   draw() {
-    bulletShape.circle(this.pos.x, this.pos.y, this.r);
-    bulletShape.fill(this.c);
+    bulletShape.ellipse({x: this.pos.x, y: this.pos.y, radius: this.r});
+    bulletShape.fill({color: this.c});
   }
   moveBullet() {
     this.pos = Vector2D.add(this.pos, this.vel);
@@ -183,8 +185,8 @@ class Particles {
     this.c = color;
   }
   draw() {
-    bulletShape.circle(this.pos.x, this.pos.y, this.r);
-    bulletShape.fill(this.c);
+    bulletShape.ellipse({x: this.pos.x, y: this.pos.y, radius: this.r});
+    bulletShape.fill({color: this.c});
   }
   move() {
     this.pos = Vector2D.add(this.pos, this.vel);
@@ -212,8 +214,8 @@ class Invaders {
     this.c = color;
   }
   draw(theta) {
-    invaderShape.complex(this.life, this.pos.x, this.pos.y, this.m, theta);
-    invaderShape.fill(this.c);
+    invaderShape.polygon({x: this.pos.x, y: this.pos.y, length: this.life, faces: this.m, rotation: theta});
+    invaderShape.fill({color: this.c});
   }
   move() {
     this.dir = Vector2D.sub(center, this.pos);
@@ -249,7 +251,7 @@ class SmartInvaders extends Invaders {
 
     this.pos = Vector2D.add(this.pos, this.vel);
 
-    let theta = Math.atan2(this.acc.x, this.acc.y);
+    let theta = Math.atan2(this.vel.y, this.vel.x);
     this.draw(theta);
   }
 }
@@ -264,8 +266,8 @@ class Stars {
     this.color = "rgb(255, 255, 255)";
   }
   draw() {
-    playerShape.circle(this.pos.x, this.pos.y, this.r);
-    playerShape.fill(this.color);
+    playerShape.ellipse({x: this.pos.x, y: this.pos.y, radius: this.r});
+    playerShape.fill({color: this.color});
   }
   move() {
     this.pos = Vector2D.add(this.pos, this.vel);
@@ -388,35 +390,43 @@ function invaderAnimation() {
 
 
 
-function lifeAndElixirBar() {
-  scoreCtx.lineWidth = 50;
+function statsBar() {
   // make it more visible
 
   //life
   if (lifeMeter > ship.life) {
     lifeMeter--;
   }
-  scoreShape.line(10, 20, lifeMeter, 20);
-  scoreShape.stroke("rgba(0, 200, 150, 1)");
+  scoreShape.line({x: 10, y: 10, x1: lifeMeter, y1: 10, cap: 'round'});
+  scoreShape.stroke({color: "rgba(0, 250, 250, 1)", width: 10});
+
+  if (ship.life < 10) {
+    cancelAnimationFrame(inter);
+    ship.life = 100;
+    alert("RIP Captain...");
+    location.assign("/");
+  }
 
   //elixir
   //elixirMeter = Vector2D.constrain(elixirMeter, 0, ship.elixir*10);
 
   if (elixirMeter < ship.elixir) {
-    elixirMeter += 1;
+    elixirMeter++;
   }
-  if (elixirMeter > 100) {
+  scoreShape.line({x: canvasWidth/2+10, y: 10, x1: canvasWidth/2+10 + elixirMeter, y1: 10, cap: 'round'});
+  scoreShape.stroke({color: "rgba(0, 250, 0, 1)", width: 10}); 
+
+  if (ship.elixir > 100) {
     ship.super = true;
     elixirMeter = 0;
-    ship.elixir = elixirMeter;
+    ship.elixir = 0;
 
     // super only last for 5 seconds
     setTimeout(()=> {
       ship.super = false;
     }, 5000);
   }
-  scoreShape.line(canvasWidth/2+10, 10, canvasWidth/2+10 + elixirMeter, 10);
-  scoreShape.stroke("rgba(0, 200, 0, 1)"); 
+  
 }
 function scoreCount() {
   let size = 30;
@@ -424,27 +434,19 @@ function scoreCount() {
   scoreCtx.font = `${size}px arial`;
 
   scoreCtx.fillText(`${score}`, canvasWidth/2 - size/2, canvasHeight-size);
-}
-
-function scoreAnimation() {
-  scoreCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 
   if (score >= 50) {
     cancelAnimationFrame(inter);
     alert("congratulation captain you did it...");
     location.assign("/");
   }
+}
 
+function scoreAnimation() {
+  scoreCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-  if (ship.life > 10) {
-    lifeAndElixirBar();
-    scoreCount();
-  }else {
-    cancelAnimationFrame(inter);
-    ship.life = 100;
-    alert("it's over captain...");
-    location.assign("/");
-  }
+  statsBar();
+  scoreCount();
 
   /*for (let k = starStore.length-1; k >= 0; k--) {
     starStore[k].move();
@@ -460,7 +462,7 @@ function scoreAnimation() {
 
 
 
-async function startGame() {
+async function startGame(shipId) {
   let sc = config.ship;
 
   for (let i = 0; i < 1000; i++) {
@@ -517,6 +519,24 @@ async function startGame() {
   });
 }
 
+function pauseGame() {
+  if (inter) {
+    clearInterval(inter);
+    inter = false;
+
+    let clone = pausedTemplate.content.cloneNode(true);
+    document.body.appendChild(clone);
+  }else {
+    document.querySelector("#paused").remove();
+
+    inter = setInterval(()=> {
+      playerAnimation();
+      bulletAnimation();
+      invaderAnimation();
+      scoreAnimation();
+    });
+  }
+}
 
 window.onload = async () => {
   let res = await fetch("/config.json");
@@ -524,6 +544,6 @@ window.onload = async () => {
 
   let uri = await new URL(location.href);
   gameMode = uri.searchParams.get("mode");
-  shipId = uri.searchParams.get("ship");
-  startGame();
+  let shipId = uri.searchParams.get("ship");
+  startGame(shipId);
 }

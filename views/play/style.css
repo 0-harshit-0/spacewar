@@ -1,21 +1,89 @@
-body{
-	margin: 0px;
-	overscroll-behavior: none;
-	background: black;
-}
-*{
-	font-family: 'Russo One', sans-serif;
-	user-select: none;
-}
 
-canvas{
-	-webkit-transform3d: translate(0,0,0);
-	-moz-transform3d: translate(0,0,0);
-	transform3d: translate(0,0,0);
+::root {
+  --lb: rgba(50, 50, 50, 0.8);
+}
+::selection {
+  color: white;
+  background: grey;
+}
+*, *::before, *::after {
+  font-family: 'Russo One', sans-serif;
+  user-select: none;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0;
+}
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+html, body {
+  font-size: clamp(1rem, 0.75rem + 1.5vw, 2rem);
+  height: 100vh;
+}
+body {
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',"Century Gothic", "Verdana", Futura,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: black;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-inline-size: 100%;
+  object-fit: cover;
+  block-size: auto;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+button {
+	cursor: pointer;
+}
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+#root, #__next {
+  isolation: isolate;
+}
+canvas {
+  -webkit-transform3d: translate(0,0,0);
+  -moz-transform3d: translate(0,0,0);
+  transform3d: translate(0,0,0);
 
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: -1;
-	background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: transparent;
+}
+/* css reset */
+
+#paused {
+	display: grid;
+	place-items: center;
+
+	width: 100%;
+	height: 100vh;
+	font-size: 4rem;
+	background: rgba(255, 255, 255, .2);
+}
+.blocks {
+	padding-block: 1%;
+	padding-inline: 2%;
+	border-radius: 5px;
+
+	background: rgba(255, 255, 255, 0.3);
+	backdrop-filter: blur(1px);
+	transition: 0.3s linear;
+}
+.blocks:hover {
+	background: rgba(55, 250, 255, 0.61);
 }

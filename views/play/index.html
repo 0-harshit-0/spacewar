@@ -8,11 +8,10 @@
   
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" />
 
-	<!-- <script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/src/vector.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/src/shapes.min.js" defer></script> -->
-	<script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/utility.min.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/src/vector.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/src/shapes.min.js" defer></script>
+	<!-- <script src="https://cdn.jsdelivr.net/gh/0-harshit-0/Utility-HTML5Canvas@master/utility.min.js" defer></script> -->
 
-	<!-- <script type="text/javascript" src="easy/script.js" defer></script> -->
 	<script type="text/javascript" src="constants.js" defer></script>
 	<script type="text/javascript" src="events.js" defer></script>
 	<script type="text/javascript" src="script.js" defer></script>
@@ -20,10 +19,16 @@
 </head>
 <body>
 
-	<canvas id="scores"></canvas>
 	<canvas id="invaders"></canvas>
 	<canvas id="bullets"></canvas>
 	<canvas id="players"></canvas>
+	<canvas id="scores"></canvas>
+
+	<template id="paused-template">
+		<div id="paused">
+			<span class="blocks">Paused</span>
+		</div>
+	</template>
 
 </body>
 </html>

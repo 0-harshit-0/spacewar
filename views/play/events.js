@@ -34,17 +34,7 @@ if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i)
     if (e.key == 'q' || e.key == 'Q') {
       fire = true;
     }else if (e.key == 'p'|| e.key == 'P') {
-      if (inter) {
-        clearInterval(inter);
-        inter = false;
-      }else {
-        inter = setInterval(()=> {
-          playerAnimation();
-          bulletAnimation();
-          invaderAnimation();
-          scoreAnimation();
-        });
-      }
+      pauseGame();
     }
   });
   addEventListener("keyup", e => {

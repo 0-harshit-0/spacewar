@@ -29,6 +29,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: black;
 }
 img, picture, video, canvas, svg {
   display: block;
@@ -145,6 +146,7 @@ header nav .nav-btn {
 
 .imgs {
 	width: 40%;
+	aspect-ratio: 1;
 }
 .ship-name {
 	font-size: .7rem;
