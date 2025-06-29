@@ -539,7 +539,7 @@ function pauseGame() {
 }
 
 window.onload = async () => {
-  let res = await fetch("/config.json");
+  let res = await fetch("../config.json");
   config = await res.json();
 
   let uri = await new URL(location.href);
