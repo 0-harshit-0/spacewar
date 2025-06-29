@@ -37,7 +37,7 @@ for(let i = 0; i < modes.length; i++) {
 }
 
 function goto(ship) {
-  location.assign(`/spacewar/play?mode=${mode}&ship=${ship}`);
+  location.assign(`/spacewar/views/play?mode=${mode}&ship=${ship}`);
 }
 
 backBtn.addEventListener("click", ()=> {
