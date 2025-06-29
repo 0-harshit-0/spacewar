@@ -19,7 +19,7 @@ for(let i = 0; i < modes.length; i++) {
     randBtn.style.visibility = "visible";
     wrap.innerHTML = '';
 
-    fetch("/config.json").then(async res => {
+    fetch("../config.json").then(async res => {
     	const config = await res.json();
 
     	const clone = shipContainerTemplate.content.cloneNode(true);
